@@ -1,0 +1,6 @@
+#surefire
+#Sun Apr 10 15:18:13 JST 2016
+user.dir=/Users/kawasaki/.ghq/github.com/sambatriste/duplicate-resource-detector/acceptance-test
+idea.version=15.0.4
+localRepository=/Users/kawasaki/.m2/repository
+basedir=/Users/kawasaki/.ghq/github.com/sambatriste/duplicate-resource-detector/acceptance-test
