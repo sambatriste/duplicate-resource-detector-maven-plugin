@@ -31,6 +31,12 @@ class DuplicateResourceDetector {
         return duplicated;
     }
 
+    /**
+     * 重複を検出する
+     *
+     * @param one     比較対象1
+     * @param another 比較対象2
+     */
     private void doDetect(ClasspathElement one,
                           ClasspathElement another,
                           DuplicatedResources duplicatedResources) {
@@ -39,6 +45,13 @@ class DuplicateResourceDetector {
         }
     }
 
+    /**
+     * ２つのクラスパス要素から重複したリソースを抽出する。
+     *
+     * @param one     比較対象1
+     * @param another 比較対象2
+     * @return 重複したリソース
+     */
     private static List<String> extractDuplicatedResourcePaths(
             ClasspathElement one, ClasspathElement another) {
         List<String> duplicated = new ArrayList<>();

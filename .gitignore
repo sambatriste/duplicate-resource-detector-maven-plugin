@@ -1,3 +1,4 @@
+/acceptance-test/target
 ### Maven template
 target/
 pom.xml.tag

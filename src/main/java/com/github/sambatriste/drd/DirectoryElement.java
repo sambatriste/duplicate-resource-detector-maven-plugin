@@ -29,16 +29,24 @@ class DirectoryElement implements ClasspathElement {
     }
 
 
-    private static class Walker extends SimpleFileVisitor<Path> {
+    private static class RelativePathVisitor extends SimpleFileVisitor<Path> {
 
+        /** ディレクトリ配下のリソース */
         private final List<String> resourcesInDir = new ArrayList<>();
 
+        /** 起点となるディレクトリ */
         private final Path root;
 
-        private Walker(Path root) {
+        /**
+         * コンストラクタ。
+         *
+         * @param root 起点となるディレクトリ
+         */
+        private RelativePathVisitor(Path root) {
             this.root = root;
         }
 
+        /** {@inheritDoc} */
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             Path relative = root.relativize(file);
@@ -52,14 +60,14 @@ class DirectoryElement implements ClasspathElement {
     public List<String> getContents() {
 
         Path start = Paths.get(root.toURI());
-        Walker walker = new Walker(start);
+        RelativePathVisitor visitor = new RelativePathVisitor(start);
         try {
-            Files.walkFileTree(start, walker);
+            Files.walkFileTree(start, visitor);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return walker.resourcesInDir;
+        return visitor.resourcesInDir;
     }
 
     /** {@inheritDoc} */

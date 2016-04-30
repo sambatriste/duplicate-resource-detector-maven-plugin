@@ -24,7 +24,7 @@ class JarClasspathElement implements ClasspathElement {
      *
      * @param classpathElement クラスパス要素
      */
-    public JarClasspathElement(String classpathElement) {
+    JarClasspathElement(String classpathElement) {
         this.source = classpathElement;
         this.jarFile = new File(classpathElement);
     }

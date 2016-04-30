@@ -60,15 +60,6 @@ class ClasspathElements implements Iterable<ClasspathElement> {
     }
 
     /**
-     * スコープ名を取得する。
-     *
-     * @return スコープ名
-     */
-    Scope getScope() {
-        return scope;
-    }
-
-    /**
      * クラスパス要素の文字列から{@link ClasspathElement}実装クラスの
      * インスタンスを生成する。
      *

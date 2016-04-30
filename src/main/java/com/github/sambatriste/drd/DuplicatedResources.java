@@ -26,10 +26,10 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
      * 重複したリソースを登録する。
      *
      * @param resourcePath 重複したリソースのパス
-     * @param elements 重複したリソースを保持していたクラスパス要素
+     * @param elements     重複したリソースを保持していたクラスパス要素
      */
     void add(String resourcePath, ClasspathElement... elements) {
-        if (isMetaInf(resourcePath)) {
+        if (isManifest(resourcePath)) {
             return;
         }
         Set<ClasspathElement> container = getContainer(resourcePath);
@@ -37,10 +37,22 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
         assert container.size() > 1;
     }
 
-    private boolean isMetaInf(String resourcePath) {
+    /**
+     * リソースがマニフェストファイルかどうか判定する。
+     *
+     * @param resourcePath リソースパス
+     * @return マニフェストファイルの場合、真
+     */
+    private boolean isManifest(String resourcePath) {
         return resourcePath.equals("META-INF/MANIFEST.MF");
     }
 
+    /**
+     * リソースパスに対応するクラスパスの{@link Set}を取得する。
+     *
+     * @param resourcePath リソースパス
+     * @return リソースパスに対応するクラスパスのSet
+     */
     private Set<ClasspathElement> getContainer(String resourcePath) {
         Set<ClasspathElement> elements = duplicated.get(resourcePath);
         if (elements == null) {
@@ -50,11 +62,16 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
         return elements;
     }
 
+    /**
+     * 空であるか判定する。
+     *
+     * @return 重複したリソースが存在しない場合、真
+     */
     boolean isEmpty() {
         return duplicated.isEmpty();
     }
 
-
+    /** {@inheritDoc} */
     @Override
     public Iterator<Entry<String, Set<ClasspathElement>>> iterator() {
         return duplicated.entrySet().iterator();

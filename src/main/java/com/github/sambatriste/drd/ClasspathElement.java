@@ -3,7 +3,7 @@ package com.github.sambatriste.drd;
 import java.util.List;
 
 /**
- * クラスパス内の要素。
+ * クラスパス要素。
  */
 interface ClasspathElement {
 
