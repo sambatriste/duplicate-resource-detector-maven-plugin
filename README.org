@@ -1,0 +1,6 @@
+# -*- mode: org; coding: utf-8-unix -*-
+
+#+TITLE: duplicate-resource-detector-maven-plugin
+
+クラスパス上の重複したリソースを検出します。
+
