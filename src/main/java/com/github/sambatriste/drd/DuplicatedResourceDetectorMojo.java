@@ -10,6 +10,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -18,12 +19,15 @@ import java.util.Set;
  */
 @Mojo(
         name = "detect",
-        requiresDependencyResolution = ResolutionScope.RUNTIME
+        requiresDependencyResolution = ResolutionScope.TEST
 )
 public class DuplicatedResourceDetectorMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
+
+    @Parameter(readonly = true)
+    private List<String> excludedResources;
 
     /** 出力先 */
     private final Printer printer = new MavenLoggerPrinter(getLog());
@@ -32,11 +36,21 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         printer.println("start detecting.");
+        printer.println("excluded resources=" + excludedResources);
+        try {
+            // RUNTIME scope
+            @SuppressWarnings("unchecked")
+            List<String> rt = project.getRuntimeClasspathElements();
+            printDuplicatedElementsOf(new ClasspathElements(rt, Scope.RUNTIME));
 
-        // RUNTIME scope
-        printDuplicatedElementsOf(getProjectRuntimeClasspathElements());
-        // TEST scope
-        printDuplicatedElementsOf(getProjectTestClasspathElements());
+            // TEST scope
+            @SuppressWarnings("unchecked")
+            List<String> test = project.getTestClasspathElements();
+            printDuplicatedElementsOf(new ClasspathElements(test, Scope.TEST));
+
+        } catch (DependencyResolutionRequiredException e) {
+            throw new RuntimeException(e);
+        }
 
         printer.println("end detecting.");
 
@@ -48,9 +62,18 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
      * @param elements 調査対象となる{@link ClasspathElements}
      */
     private void printDuplicatedElementsOf(ClasspathElements elements) {
-        printer.println(elements.scope + " classpath=" + elements.elements);
+        print(elements);
         DuplicatedResources duplicated = detect(elements);
         print(duplicated);
+
+    }
+
+    private void print(ClasspathElements elements) {
+        printer.println(elements.scope + " classpath [");
+        for (ClasspathElement element : elements) {
+            printer.println("    " + element);
+        }
+        printer.println("]");
 
     }
 
@@ -61,7 +84,9 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
      * @return 重複したリソース
      */
     private DuplicatedResources detect(ClasspathElements classpathElements) {
-        DuplicateResourceDetector detector = new DuplicateResourceDetector(classpathElements);
+        DuplicateResourceDetector detector = new DuplicateResourceDetector(
+                classpathElements,
+                new PatternSet(excludedResources));
         return detector.detect();
     }
 
@@ -72,7 +97,7 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
      */
     private void print(DuplicatedResources duplicated) {
         if (duplicated.isEmpty()) {
-            printer.println("no detected resource found.");
+            printer.println("No duplicated resource found.");
             return;
         }
 
@@ -95,31 +120,4 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
     }
 
 
-    /**
-     * プロジェクトのRuntimeクラスパス要素を取得する。
-     *
-     * @return Runtimeクラスパス要素
-     */
-    @SuppressWarnings("unchecked")
-    private ClasspathElements getProjectRuntimeClasspathElements() {
-        try {
-            return new ClasspathElements(project.getRuntimeClasspathElements(), Scope.RUNTIME);
-        } catch (DependencyResolutionRequiredException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * プロジェクトのCompileクラスパス要素を取得する。
-     *
-     * @return Compileクラスパス要素
-     */
-    @SuppressWarnings("unchecked")
-    private ClasspathElements getProjectTestClasspathElements() {
-        try {
-            return new ClasspathElements(project.getTestClasspathElements(), Scope.TEST);
-        } catch (DependencyResolutionRequiredException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

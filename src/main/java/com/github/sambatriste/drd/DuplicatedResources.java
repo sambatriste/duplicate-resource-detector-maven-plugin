@@ -11,9 +11,11 @@ import java.util.Set;
 
 /**
  * 重複したリソース。
- * ただし、META-INF/MANIFEST.MFは管理対象外とする。
+ * ただし、META-INF配下は管理対象外とする。
  */
 class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement>>> {
+
+    private final PatternSet excludedResources;
 
     /**
      * 重複したリソース。
@@ -22,6 +24,10 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
      */
     private final Map<String, Set<ClasspathElement>> duplicated = new LinkedHashMap<>();
 
+    DuplicatedResources(PatternSet excludedResources) {
+        this.excludedResources = excludedResources;
+    }
+
     /**
      * 重複したリソースを登録する。
      *
@@ -29,7 +35,10 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
      * @param elements     重複したリソースを保持していたクラスパス要素
      */
     void add(String resourcePath, ClasspathElement... elements) {
-        if (isManifest(resourcePath)) {
+        if (isMetaInf(resourcePath)) {
+            return;
+        }
+        if (excludedResources.any(resourcePath)) {
             return;
         }
         Set<ClasspathElement> container = getContainer(resourcePath);
@@ -43,8 +52,8 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
      * @param resourcePath リソースパス
      * @return マニフェストファイルの場合、真
      */
-    private boolean isManifest(String resourcePath) {
-        return resourcePath.equals("META-INF/MANIFEST.MF");
+    private boolean isMetaInf(String resourcePath) {
+        return resourcePath.startsWith("META-INF");
     }
 
     /**

@@ -8,10 +8,17 @@ import java.util.List;
  */
 class DuplicateResourceDetector {
 
+    /** クラスパス要素 */
     private final ClasspathElements classpathElements;
 
-    DuplicateResourceDetector(ClasspathElements classpathElements) {
+    /** 除外パターン */
+    private final PatternSet excludedResources;
+
+    DuplicateResourceDetector(ClasspathElements classpathElements,
+                              PatternSet excludedResources) {
+
         this.classpathElements = classpathElements;
+        this.excludedResources = excludedResources;
     }
 
     /**
@@ -20,7 +27,7 @@ class DuplicateResourceDetector {
      * @return 検出された重複リソース
      */
     DuplicatedResources detect() {
-        DuplicatedResources duplicated = new DuplicatedResources();
+        DuplicatedResources duplicated = new DuplicatedResources(excludedResources);
         for (int i = 0; i < classpathElements.size() - 1; i++) {
             ClasspathElement one = classpathElements.get(i);
             for (int j = i + 1; j < classpathElements.size(); j++) {

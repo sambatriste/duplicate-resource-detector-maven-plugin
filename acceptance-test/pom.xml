@@ -18,6 +18,14 @@
             </goals>
           </execution>
         </executions>
+
+        <configuration>
+          <excludedResources>
+            <param>LICENSE-junit.txt</param>
+          </excludedResources>
+        </configuration>
+
+
       </plugin>
     </plugins>
   </build>
@@ -26,7 +34,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
