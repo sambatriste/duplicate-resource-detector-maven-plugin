@@ -36,23 +36,32 @@ class JarClasspathElement implements ClasspathElement {
     }
 
     /**
-     * 引数で与えられたファイルをzipファイルとして読み込み、
-     * そのエントリを取得する。
+     * 引数で与えられたファイルをzipファイルとして読み込み、そのエントリを取得する。
+     * ただし、ディレクトリは除外する。
      *
      * @param file 対象となるファイル
      * @return zipファイルのエントリ一覧
      */
     private static List<String> tvf(File file) {
         ZipFile jar = toZipFile(file);
+        List<String> contents = new ArrayList<>(jar.size());
         Enumeration<? extends ZipEntry> entries = jar.entries();
-        List<String> content = new ArrayList<>(jar.size());
         while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (!entry.isDirectory()) {
-                content.add(entry.getName());
-            }
+            addIfNotDirectory(entries.nextElement(), contents);
         }
-        return content;
+        return contents;
+    }
+
+    /**
+     * エントリがディレクトリでなければListに追加する。
+     *
+     * @param entry エントリ
+     * @param content List
+     */
+    private static void addIfNotDirectory(ZipEntry entry, List<String> content) {
+        if (!entry.isDirectory()) {
+            content.add(entry.getName());
+        }
     }
 
     /**
