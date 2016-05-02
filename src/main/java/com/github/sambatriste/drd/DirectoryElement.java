@@ -50,8 +50,12 @@ class DirectoryElement implements ClasspathElement {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             Path relative = root.relativize(file);
-            resourcesInDir.add(relative.toString());
+            resourcesInDir.add(normalize(relative));
             return FileVisitResult.CONTINUE;
+        }
+
+        private static String normalize(Path path) {
+            return path.toString().replace('\\', '/');
         }
     }
 
