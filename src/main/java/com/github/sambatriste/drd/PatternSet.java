@@ -46,12 +46,16 @@ class PatternSet {
      * @return マッチする場合、真
      */
     boolean any(String target) {
+        return getMatched(target) != null;
+    }
+
+    Pattern getMatched(String target) {
         for (Pattern pattern : patterns) {
             boolean matches = pattern.matcher(target).matches();
             if (matches) {
-                return true;
+                return pattern;
             }
         }
-        return false;
+        return null;
     }
 }

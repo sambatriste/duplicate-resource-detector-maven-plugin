@@ -28,7 +28,7 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
     private MavenProject project;
 
     /** 除外するリソースのパターン（正規表現）*/
-    @Parameter(readonly = true)
+    @Parameter
     private List<String> excludedResources;
 
     /** 出力先 */

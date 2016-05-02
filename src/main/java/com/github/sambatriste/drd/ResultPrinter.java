@@ -1,5 +1,7 @@
 package com.github.sambatriste.drd;
 
+import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
+
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -45,6 +47,8 @@ class ResultPrinter {
      * @param duplicated 重複したリソース
      */
     void print(DuplicatedResources duplicated) {
+        print(duplicated.getExcludedResources());
+
         if (duplicated.isEmpty()) {
             printer.println("No duplicated resource found.");
             return;
@@ -53,6 +57,23 @@ class ResultPrinter {
         for (Entry<String, Set<ClasspathElement>> entry : duplicated) {
             print(entry);
         }
+    }
+
+    /**
+     * 除外されたリソースを出力する。
+     * @param excluded 除外されたリソース
+     */
+    private void print(Set<ExcludedResource> excluded) {
+        if (excluded.isEmpty()) {
+            printer.println("no resource excluded.");
+            return;
+        }
+
+        printer.println("excluded resources --------");
+        for (ExcludedResource e : excluded) {
+            printer.println(TAB, e);
+        }
+        printer.println("---------");
     }
 
     /**

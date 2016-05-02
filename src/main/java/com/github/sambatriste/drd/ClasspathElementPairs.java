@@ -29,7 +29,7 @@ class ClasspathElementPairs {
      * @return 重複した要素
      */
     DuplicatedResources detectDuplicated(PatternSet excluded) {
-        DuplicatedResources.Builder builder = DuplicatedResources.startBuild(excluded);
+        DuplicatedResourceContext builder = DuplicatedResources.startBuild(excluded);
         for (ClasspathElementPair pair : pairs) {
             pair.appendDuplicatedResourcesTo(builder);
         }

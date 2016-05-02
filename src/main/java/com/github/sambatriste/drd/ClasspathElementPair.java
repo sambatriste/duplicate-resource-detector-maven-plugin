@@ -27,11 +27,11 @@ class ClasspathElementPair {
 
     /**
      * ２つのクラスパス要素で重複したリソースを検出し、
-     * 引数で与えられた{@link DuplicatedResources.Builder}に追加する。
+     * 引数で与えられた{@link DuplicatedResourceContext}に追加する。
      *
      * @param builder 重複したリソース作成クラス
      */
-    void appendDuplicatedResourcesTo(DuplicatedResources.Builder builder) {
+    void appendDuplicatedResourcesTo(DuplicatedResourceContext builder) {
         for (String resourcePath : detectDuplicatedResourcePaths()) {
             builder.add(resourcePath, one, another);
         }
