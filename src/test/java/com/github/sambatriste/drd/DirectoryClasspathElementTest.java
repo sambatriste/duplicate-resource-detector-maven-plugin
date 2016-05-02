@@ -5,16 +5,16 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * Created by kawasaki on 2016/04/30.
+ * {@link DirectoryClasspathElement}のテスト
  */
-public class DirectoryElementTest {
+public class DirectoryClasspathElementTest {
 
 
     @Test
     public void test() {
         File file = new File("target/classes");
         assert file.exists();
-        DirectoryElement sut = new DirectoryElement(file);
+        DirectoryClasspathElement sut = new DirectoryClasspathElement(file);
         
         System.out.println("sut.getContents() = " + sut.getContents());
     }

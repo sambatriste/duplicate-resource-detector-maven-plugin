@@ -4,30 +4,37 @@ package com.github.sambatriste.drd;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
- * Created by tie301686 on 2016/05/02.
+ * クラスパス要素の全ペア。
  */
 class ClasspathElementPairs {
 
+    /** クラスパス要素のペア */
     private final List<ClasspathElementPair> pairs;
 
+    /**
+     * コンストラクタ。
+     * 与えられたクラスパスから、クラスパス要素のペアを作成する。
+     *
+     * @param classpathElements クラスパス要素
+     */
     ClasspathElementPairs(List<String> classpathElements) {
         this.pairs = doPairing(classpathElements);
     }
 
     /**
-     * ２つのクラスパス要素で重複したリソースを検出し、
-     * 引数で与えられた{@link DuplicatedResources}に追加する。
+     * クラスパス要素ペア間で重複したリソースを検出する。
      *
-     * @param duplicatedResources 重複したリソース
+     * @param excluded 除外パターン
+     * @return 重複した要素
      */
-    void appendDuplicatedResourcesTo(DuplicatedResources duplicatedResources) {
+    DuplicatedResources detectDuplicated(PatternSet excluded) {
+        DuplicatedResources.Builder builder = DuplicatedResources.startBuild(excluded);
         for (ClasspathElementPair pair : pairs) {
-            pair.appendDuplicatedResourcesTo(duplicatedResources);
+            pair.appendDuplicatedResourcesTo(builder);
         }
+        return builder.build();
     }
 
     /**
@@ -65,7 +72,7 @@ class ClasspathElementPairs {
             return new JarClasspathElement(e);
         }
         if (f.isDirectory()) {
-            return new DirectoryElement(f);
+            return new DirectoryClasspathElement(f);
         }
         throw new IllegalArgumentException("unknown type. " + e);
     }

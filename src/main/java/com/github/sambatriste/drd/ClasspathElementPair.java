@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by tie301686 on 2016/05/02.
+ * クラスパス要素のペア。
  */
 class ClasspathElementPair {
 
+    /** 片方のクラスパス要素 */
     private final ClasspathElement one;
 
+    /** もう一方のクラスパス要素 */
     private final ClasspathElement another;
 
+    /**
+     * コンストラクタ。
+     *
+     * @param one 片方のクラスパス要素
+     * @param another もう一方のクラスパス要素
+     */
     ClasspathElementPair(ClasspathElement one, ClasspathElement another) {
         this.one = one;
         this.another = another;
@@ -19,20 +27,20 @@ class ClasspathElementPair {
 
     /**
      * ２つのクラスパス要素で重複したリソースを検出し、
-     * 引数で与えられた{@link DuplicatedResources}に追加する。
+     * 引数で与えられた{@link DuplicatedResources.Builder}に追加する。
      *
-     * @param duplicatedResources 重複したリソース
+     * @param builder 重複したリソース作成クラス
      */
-    void appendDuplicatedResourcesTo(DuplicatedResources duplicatedResources) {
+    void appendDuplicatedResourcesTo(DuplicatedResources.Builder builder) {
         for (String resourcePath : detectDuplicatedResourcePaths()) {
-            duplicatedResources.add(resourcePath, one, another);
+            builder.add(resourcePath, one, another);
         }
     }
 
     /**
      * ２つのクラスパス要素から重複したリソースを抽出する。
      *
-     * @return 重複したリソース
+     * @return 重複したリソース全て
      */
     private List<String> detectDuplicatedResourcePaths() {
         List<String> duplicated = new ArrayList<>();

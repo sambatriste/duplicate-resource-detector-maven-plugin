@@ -24,8 +24,6 @@
             <param>LICENSE-junit.txt</param>
           </excludedResources>
         </configuration>
-
-
       </plugin>
     </plugins>
   </build>

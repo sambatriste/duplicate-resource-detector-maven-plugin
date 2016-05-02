@@ -23,21 +23,22 @@ import java.util.Set;
 )
 public class DuplicatedResourceDetectorMojo extends AbstractMojo {
 
+    /** Mavenプロジェクト */
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
+    /** 除外するリソースのパターン（正規表現）*/
     @Parameter(readonly = true)
     private List<String> excludedResources;
 
     /** 出力先 */
-    private final Printer printer = new MavenLoggerPrinter(getLog());
+    private final ResultPrinter resultPrinter = new ResultPrinter(new MavenLoggerPrinter(getLog()));
 
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException {
-        printer.println("start detecting.");
-        printer.println("excluded resources=" + excludedResources);
+        resultPrinter.printExcludedResources(excludedResources);
         try {
             // RUNTIME scope
             List<String> runtimeScoped = project.getRuntimeClasspathElements();
@@ -49,21 +50,21 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
         } catch (DependencyResolutionRequiredException e) {
             throw new RuntimeException(e);
         }
-        printer.println("end detecting.");
-
     }
 
-    private void detectAndPrint(List<String> classpathElements, String scope) {
+    /**
+     * 検出した重複を出力する
+     * @param classpathElements クラスパス要素
+     * @param scopeName スコープ名
+     */
+    private void detectAndPrint(List<String> classpathElements, String scopeName) {
         DuplicateResourceDetector detector = new DuplicateResourceDetector(
                 classpathElements,
                 excludedResources,
-                scope,
-                printer
+                scopeName,
+                resultPrinter
         );
         detector.printDuplicatedElements();
     }
-
-
-
 
 }

@@ -3,6 +3,7 @@ package com.github.sambatriste.drd;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * {@link ClasspathElement}のディレクトリ実装クラス。
  */
-class DirectoryElement implements ClasspathElement {
+class DirectoryClasspathElement implements ClasspathElement {
 
     /** ディレクトリ */
     private final File root;
@@ -24,11 +25,13 @@ class DirectoryElement implements ClasspathElement {
      *
      * @param dir ディレクトリ
      */
-    DirectoryElement(File dir) {
+    DirectoryClasspathElement(File dir) {
         this.root = dir;
     }
 
-
+    /**
+     * ディレクトリ配下のファイルを相対パスで探索する{@link FileVisitor}実装クラス。
+     */
     private static class RelativePathVisitor extends SimpleFileVisitor<Path> {
 
         /** ディレクトリ配下のリソース */
@@ -54,6 +57,7 @@ class DirectoryElement implements ClasspathElement {
             return FileVisitResult.CONTINUE;
         }
 
+        /** パスを正規化する。 */
         private static String normalize(Path path) {
             return path.toString().replace('\\', '/');
         }
