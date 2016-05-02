@@ -1,70 +1,88 @@
 package com.github.sambatriste.drd;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 重複したリソースを検出するクラス。
  */
 class DuplicateResourceDetector {
 
-    /** クラスパス要素 */
-    private final ClasspathElements classpathElements;
+    private final List<String> classpathElements;
 
     /** 除外パターン */
     private final PatternSet excludedResources;
 
-    DuplicateResourceDetector(ClasspathElements classpathElements,
-                              PatternSet excludedResources) {
+    private final String scope;
 
+    private final Printer printer;
+
+    DuplicateResourceDetector(
+            List<String> classpathElements,
+            List<String> excludedResources,
+            String scope,
+            Printer printer) {
         this.classpathElements = classpathElements;
-        this.excludedResources = excludedResources;
+        this.excludedResources = new PatternSet(excludedResources);
+        this.scope = scope;
+        this.printer = printer;
     }
 
     /**
-     * 重複を検出する。
+     * 重複したリソースを出力する。
      *
-     * @return 検出された重複リソース
      */
-    DuplicatedResources detect() {
+    void printDuplicatedElements() {
+        print(classpathElements, scope);
+        DuplicatedResources duplicated = detect();
+        print(duplicated);
+    }
+
+    private DuplicatedResources detect() {
         DuplicatedResources duplicated = new DuplicatedResources(excludedResources);
-        for (int i = 0; i < classpathElements.size() - 1; i++) {
-            ClasspathElement one = classpathElements.get(i);
-            for (int j = i + 1; j < classpathElements.size(); j++) {
-                ClasspathElement another = classpathElements.get(j);
-                doDetect(one, another, duplicated);
-            }
-        }
+        ClasspathElementPairs pairs = new ClasspathElementPairs(classpathElements);
+        pairs.appendDuplicatedResourcesTo(duplicated);
         return duplicated;
     }
 
+    private void print(List<String> classpathElements, String scope) {
+        printer.println(scope + " classpath [");
+        for (String element : classpathElements) {
+            printer.println("    " + element);
+        }
+        printer.println("]");
+
+    }
+
+
     /**
-     * 重複を検出する
+     * 重複したリソースを出力する。
      *
-     * @param one     比較対象1
-     * @param another 比較対象2
+     * @param duplicated 重複したリソース
      */
-    private void doDetect(ClasspathElement one,
-                          ClasspathElement another,
-                          DuplicatedResources duplicatedResources) {
-        for (String resourcePath : extractDuplicatedResourcePaths(one, another)) {
-            duplicatedResources.add(resourcePath, one, another);
+    private void print(DuplicatedResources duplicated) {
+        if (duplicated.isEmpty()) {
+            printer.println("No duplicated resource found.");
+            return;
+        }
+
+        for (Entry<String, Set<ClasspathElement>> entry : duplicated) {
+            print(entry);
         }
     }
 
     /**
-     * ２つのクラスパス要素から重複したリソースを抽出する。
+     * 重複したリソース1件を出力する。
      *
-     * @param one     比較対象1
-     * @param another 比較対象2
-     * @return 重複したリソース
+     * @param entry 1件分のエントリ
      */
-    private static List<String> extractDuplicatedResourcePaths(
-            ClasspathElement one, ClasspathElement another) {
-        List<String> duplicated = new ArrayList<>();
-        duplicated.addAll(one.getContents());
-        duplicated.retainAll(another.getContents());
-        return duplicated;
+    private void print(Entry<String, Set<ClasspathElement>> entry) {
+        printer.println("resource=" + entry.getKey());
+        for (ClasspathElement classpathElement : entry.getValue()) {
+            printer.println("    ", classpathElement);
+        }
+        printer.println("----------------------");
     }
 
 }

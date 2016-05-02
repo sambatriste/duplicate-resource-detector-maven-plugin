@@ -1,6 +1,6 @@
 package com.github.sambatriste.drd;
 
-import com.github.sambatriste.drd.ClasspathElements.Scope;
+
 import com.github.sambatriste.drd.Printer.MavenLoggerPrinter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -34,90 +34,36 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException {
         printer.println("start detecting.");
         printer.println("excluded resources=" + excludedResources);
         try {
             // RUNTIME scope
-            @SuppressWarnings("unchecked")
-            List<String> rt = project.getRuntimeClasspathElements();
-            printDuplicatedElementsOf(new ClasspathElements(rt, Scope.RUNTIME));
+            List<String> runtimeScoped = project.getRuntimeClasspathElements();
+            detectAndPrint(runtimeScoped, "RUNTIME");
 
             // TEST scope
-            @SuppressWarnings("unchecked")
-            List<String> test = project.getTestClasspathElements();
-            printDuplicatedElementsOf(new ClasspathElements(test, Scope.TEST));
-
+            List<String> testScoped = project.getTestClasspathElements();
+            detectAndPrint(testScoped, "TEST");
         } catch (DependencyResolutionRequiredException e) {
             throw new RuntimeException(e);
         }
-
         printer.println("end detecting.");
 
     }
 
-    /**
-     * 重複したリソースを出力する。
-     *
-     * @param elements 調査対象となる{@link ClasspathElements}
-     */
-    private void printDuplicatedElementsOf(ClasspathElements elements) {
-        print(elements);
-        DuplicatedResources duplicated = detect(elements);
-        print(duplicated);
-
-    }
-
-    private void print(ClasspathElements elements) {
-        printer.println(elements.scope + " classpath [");
-        for (ClasspathElement element : elements) {
-            printer.println("    " + element);
-        }
-        printer.println("]");
-
-    }
-
-    /**
-     * リソースの重複を検出する。
-     *
-     * @param classpathElements 調査対象のクラスパス要素
-     * @return 重複したリソース
-     */
-    private DuplicatedResources detect(ClasspathElements classpathElements) {
+    private void detectAndPrint(List<String> classpathElements, String scope) {
         DuplicateResourceDetector detector = new DuplicateResourceDetector(
                 classpathElements,
-                new PatternSet(excludedResources));
-        return detector.detect();
+                excludedResources,
+                scope,
+                printer
+        );
+        detector.printDuplicatedElements();
     }
 
-    /**
-     * 重複したリソースを出力する。
-     *
-     * @param duplicated 重複したリソース
-     */
-    private void print(DuplicatedResources duplicated) {
-        if (duplicated.isEmpty()) {
-            printer.println("No duplicated resource found.");
-            return;
-        }
 
-        for (Entry<String, Set<ClasspathElement>> entry : duplicated) {
-            print(entry);
-        }
-    }
-
-    /**
-     * 重複したリソース1件を出力する。
-     *
-     * @param entry 1件分のエントリ
-     */
-    private void print(Entry<String, Set<ClasspathElement>> entry) {
-        printer.println("resource=" + entry.getKey());
-        for (ClasspathElement classpathElement : entry.getValue()) {
-            printer.println("    ", classpathElement);
-        }
-        printer.println("----------------------");
-    }
 
 
 }

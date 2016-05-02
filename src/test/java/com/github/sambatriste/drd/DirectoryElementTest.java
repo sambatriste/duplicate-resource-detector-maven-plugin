@@ -15,7 +15,7 @@ public class DirectoryElementTest {
         File file = new File("target/classes");
         assert file.exists();
         DirectoryElement sut = new DirectoryElement(file);
-
+        
         System.out.println("sut.getContents() = " + sut.getContents());
     }
 }
