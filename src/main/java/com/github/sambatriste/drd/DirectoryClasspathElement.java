@@ -29,6 +29,28 @@ class DirectoryClasspathElement implements ClasspathElement {
         this.root = dir;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public List<String> getContents() {
+
+        Path start = Paths.get(root.toURI());
+        RelativePathVisitor visitor = new RelativePathVisitor(start);
+        try {
+            Files.walkFileTree(start, visitor);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return visitor.resourcesInDir;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return root.getPath();
+    }
+
+
     /**
      * ディレクトリ配下のファイルを相対パスで探索する{@link FileVisitor}実装クラス。
      */
@@ -61,26 +83,5 @@ class DirectoryClasspathElement implements ClasspathElement {
         private static String normalize(Path path) {
             return path.toString().replace('\\', '/');
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<String> getContents() {
-
-        Path start = Paths.get(root.toURI());
-        RelativePathVisitor visitor = new RelativePathVisitor(start);
-        try {
-            Files.walkFileTree(start, visitor);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return visitor.resourcesInDir;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return root.getPath();
     }
 }

@@ -35,6 +35,12 @@ class JarClasspathElement implements ClasspathElement {
         return tvf(jarFile);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return source;
+    }
+
     /**
      * 引数で与えられたファイルをzipファイルとして読み込み、そのエントリを取得する。
      * ただし、ディレクトリは除外する。
@@ -79,9 +85,4 @@ class JarClasspathElement implements ClasspathElement {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return source;
-    }
 }

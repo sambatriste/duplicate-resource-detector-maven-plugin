@@ -1,7 +1,6 @@
 package com.github.sambatriste.drd;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ class ClasspathElementPairs {
      * @param classpathElements クラスパス要素
      */
     ClasspathElementPairs(List<String> classpathElements) {
-        this.pairs = doPairing(classpathElements);
+        this.pairs = new PairListBuilder(classpathElements).createPairs();
     }
 
     /**
@@ -38,42 +37,53 @@ class ClasspathElementPairs {
     }
 
     /**
-     * クラスパス要素の文字列表現から、{@link ClasspathElement}のリストを作成する。
-     *
-     * @param classpathElements クラスパス要素の文字列表現
-     * @return {@link ClasspathElement}のリスト
+     * クラスパス要素から{@link ClasspathElementPair}のリストを作成するクラス。
      */
-    private static List<ClasspathElementPair> doPairing(List<String> classpathElements) {
-        List<ClasspathElementPair> ret = new ArrayList<>(classpathElements.size());
-        for (int i = 0; i < classpathElements.size() - 1; i++) {
-            ClasspathElement one = toClasspathElement(classpathElements.get(i));
-            for (int j = i + 1; j < classpathElements.size(); j++) {
-                ClasspathElement another = toClasspathElement(classpathElements.get(j));
-                ret.add(new ClasspathElementPair(one, another));
+    private static class PairListBuilder {
+
+        /** 作成されたペア */
+        private final List<ClasspathElementPair> pairs;
+
+        /** クラスパス要素 */
+        private final List<String> classpathElements;
+
+        private final ClasspathElementFactory elementFactory = new ClasspathElementFactory();
+
+        /**
+         * コンストラクタ。
+         * @param classpathElements クラスパス要素
+         */
+        private PairListBuilder(List<String> classpathElements) {
+            this.classpathElements = classpathElements;
+            this.pairs = new ArrayList<>(classpathElements.size());
+        }
+
+        /**
+         * クラスパス要素の文字列表現から、{@link ClasspathElement}のリストを作成する。
+         *
+         * @return {@link ClasspathElement}のリスト
+         */
+        private List<ClasspathElementPair> createPairs() {
+            pairs.clear();
+            for (int i = 0; i < classpathElements.size() - 1; i++) {
+                for (int j = i + 1; j < classpathElements.size(); j++) {
+                    pairs.add(createPair(i, j));
+                }
             }
+            return pairs;
         }
-        return ret;
-    }
 
-
-    /**
-     * クラスパス要素の文字列から{@link ClasspathElement}実装クラスの
-     * インスタンスを生成する。
-     *
-     * @param e クラスパス要素の文字列
-     * @return {@link ClasspathElement}実装クラスのインスタンス
-     */
-    private static ClasspathElement toClasspathElement(String e) {
-        File f = new File(e);
-        if (!f.exists()) {
-            throw new IllegalArgumentException(e + " does not exist.");
+        /**
+         * ペアを作成する。
+         *
+         * @param i 一方の添字
+         * @param j もう一方の添字
+         * @return 組み合わされたペア
+         */
+        private ClasspathElementPair createPair(int i, int j) {
+            ClasspathElement one = elementFactory.create(classpathElements.get(i));
+            ClasspathElement another = elementFactory.create(classpathElements.get(j));
+            return new ClasspathElementPair(one, another);
         }
-        if (f.getName().endsWith(".jar")) {
-            return new JarClasspathElement(e);
-        }
-        if (f.isDirectory()) {
-            return new DirectoryClasspathElement(f);
-        }
-        throw new IllegalArgumentException("unknown type. " + e);
     }
 }
