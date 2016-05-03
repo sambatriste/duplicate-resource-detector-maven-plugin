@@ -1,14 +1,8 @@
 package com.github.sambatriste.drd.classpath;
 
 import com.github.sambatriste.drd.duplicated.DuplicatedResources;
+import com.github.sambatriste.drd.util.MultiValueMapWrapper;
 import com.github.sambatriste.drd.util.PatternSet;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * {@link DuplicatedResources}の中間結果を保持するクラス。
@@ -55,7 +49,7 @@ class DuplicatedResourceContext {
      */
     DuplicatedResources getResult() {
         return new DuplicatedResources(
-                duplicated.map,
+                duplicated.getOriginal(),
                 filter.getFilteredResources());
     }
 
@@ -70,51 +64,4 @@ class DuplicatedResourceContext {
         return resourcePath.startsWith("META-INF");
     }
 
-    /**
-     * 値に複数の要素を持つMapのラッパークラス。
-     *
-     * @param <K> キーの型
-     * @param <V> 値の型
-     */
-    private static class MultiValueMapWrapper<K, V> {
-
-        /** ラップ対象のMap */
-        private final Map<K, Set<V>> map = new LinkedHashMap<>();
-
-        /**
-         * 重複したリソースを登録する。
-         *
-         * @param key         キー
-         * @param valuesToAdd 追加対象の値
-         */
-        private void add(K key, V[] valuesToAdd) {
-            add(key, Arrays.asList(valuesToAdd));
-        }
-
-        /**
-         * 重複したリソースを登録する。
-         *
-         * @param key         キー
-         * @param valuesToAdd 追加対象の値
-         */
-        private void add(K key, Collection<V> valuesToAdd) {
-            Set<V> values = getValueContainer(key);
-            values.addAll(valuesToAdd);
-        }
-
-        /**
-         * キー対応する値のコレクションを取得する。
-         *
-         * @param key リソースパス
-         * @return リソースパスに対応するクラスパスのSet
-         */
-        private Set<V> getValueContainer(K key) {
-            Set<V> container = map.get(key);
-            if (container == null) {
-                container = new LinkedHashSet<>();
-                map.put(key, container);
-            }
-            return container;
-        }
-    }
 }
