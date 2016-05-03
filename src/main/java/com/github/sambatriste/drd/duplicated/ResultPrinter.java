@@ -18,6 +18,9 @@ class ResultPrinter {
     /** タブ */
     private static final String TAB = "    ";
 
+    /** hr */
+    private static final String HR = "------------------------------";
+
     /** 出力先 */
     private final Printer printer;
 
@@ -68,15 +71,15 @@ class ResultPrinter {
      */
     private void print(Set<ExcludedResource> excluded) {
         if (excluded.isEmpty()) {
-            printer.println("no resource excluded.");
+            printer.println("No resource excluded.");
             return;
         }
 
-        printer.println("excluded resources --------");
+        printer.println("excluded resources ", HR);
         for (ExcludedResource e : excluded) {
             printer.println(TAB, e);
         }
-        printer.println("---------");
+        printer.println(HR);
     }
 
     /**
@@ -89,7 +92,7 @@ class ResultPrinter {
         for (ClasspathElement classpathElement : entry.getValue()) {
             printer.println(TAB, classpathElement);
         }
-        printer.println("----------------------");
+        printer.println(HR);
     }
 
     void printExcludedResources(PatternSet excludedResources) {
