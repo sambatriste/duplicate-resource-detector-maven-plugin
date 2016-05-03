@@ -1,4 +1,4 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.util;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * {@link Pattern}の集合
  */
-class PatternSet {
+public class PatternSet {
 
     /** {@link Pattern}の集合 */
     private final Set<Pattern> patterns;
@@ -19,7 +19,7 @@ class PatternSet {
      *
      * @param patterns パターン文字列
      */
-    PatternSet(Collection<String> patterns) {
+    public PatternSet(Collection<String> patterns) {
         this.patterns = createPatterns(patterns);
     }
 
@@ -45,11 +45,11 @@ class PatternSet {
      * @param target 対象文字列
      * @return マッチする場合、真
      */
-    boolean any(String target) {
+    public boolean any(String target) {
         return getMatched(target) != null;
     }
 
-    Pattern getMatched(String target) {
+    public Pattern getMatched(String target) {
         for (Pattern pattern : patterns) {
             boolean matches = pattern.matcher(target).matches();
             if (matches) {
@@ -57,5 +57,12 @@ class PatternSet {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return patterns.toString();
+
+
     }
 }

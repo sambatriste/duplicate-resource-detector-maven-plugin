@@ -1,10 +1,8 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import com.github.sambatriste.drd.duplicated.DuplicatedResources;
+import com.github.sambatriste.drd.util.MultiValueMapWrapper;
+import com.github.sambatriste.drd.util.PatternSet;
 
 /**
  * {@link DuplicatedResources}の中間結果を保持するクラス。
@@ -12,6 +10,7 @@ import java.util.Set;
  */
 class DuplicatedResourceContext {
 
+    /** リソースフィルタ */
     private final ResourceFilter filter;
 
     /**
@@ -19,7 +18,7 @@ class DuplicatedResourceContext {
      * キー:リソース名
      * 値:そのリソースを含んでいるクラスパス要素
      */
-    private final Map<String, Set<ClasspathElement>> duplicated = new LinkedHashMap<>();
+    private final MultiValueMapWrapper<String, ClasspathElement> duplicated = new MultiValueMapWrapper<>();
 
     /**
      * コンストラクタ。
@@ -34,18 +33,13 @@ class DuplicatedResourceContext {
      * 重複したリソースを登録する。
      *
      * @param resourcePath 重複したリソースのパス
-     * @param elements 重複したリソースを保持していたクラスパス要素
+     * @param elements     重複したリソースを保持していたクラスパス要素
      */
     void add(String resourcePath, ClasspathElement... elements) {
-        if (isMetaInf(resourcePath)) {
+        if (isMetaInf(resourcePath) || filter.applyTo(resourcePath)) {
             return;
         }
-        if (filter.applyTo(resourcePath)) {
-            return;
-        }
-        Set<ClasspathElement> values = getValueContainer(resourcePath);
-        values.addAll(Arrays.asList(elements));
-        assert values.size() > 1;
+        duplicated.add(resourcePath, elements);
     }
 
     /**
@@ -53,8 +47,10 @@ class DuplicatedResourceContext {
      *
      * @return {@link DuplicatedResources}
      */
-    DuplicatedResources build() {
-        return new DuplicatedResources(duplicated, filter.getFilteredResources());
+    DuplicatedResources getResult() {
+        return new DuplicatedResources(
+                duplicated.getOriginal(),
+                filter.getFilteredResources());
     }
 
 
@@ -68,18 +64,4 @@ class DuplicatedResourceContext {
         return resourcePath.startsWith("META-INF");
     }
 
-    /**
-     * リソースパスに対応するクラスパスの{@link Set}を取得する。
-     *
-     * @param resourcePath リソースパス
-     * @return リソースパスに対応するクラスパスのSet
-     */
-    private Set<ClasspathElement> getValueContainer(String resourcePath) {
-        Set<ClasspathElement> elements = duplicated.get(resourcePath);
-        if (elements == null) {
-            elements = new LinkedHashSet<>();
-            duplicated.put(resourcePath, elements);
-        }
-        return elements;
-    }
 }

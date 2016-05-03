@@ -1,10 +1,12 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
+
+import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-class ResourceFilter {
+public class ResourceFilter {
 
     /** 除外対象リソースのパターン */
     private final PatternSet excludedResourcePatterns;
@@ -21,6 +23,14 @@ class ResourceFilter {
         this.excludedResourcePatterns = excludedResourcePatterns;
     }
 
+    /**
+     * 引数で与えられたリソースに、本フィルターを適用する。
+     * フィルターが適用された場合、その情報は本インスタンスに記録される。
+     *
+     * @param resourcePath 対象となるリソース
+     * @return フィルターが適用された場合、真
+     * @see #getFilteredResources()
+     */
     boolean applyTo(String resourcePath) {
         Pattern matchedPattern = excludedResourcePatterns.getMatched(resourcePath);
         if (matchedPattern == null) {
@@ -30,6 +40,11 @@ class ResourceFilter {
         return true;
     }
 
+    /**
+     * 本フィルターにより除外されたリソースを取得する。
+     *
+     * @return 除外されたリソース
+     */
     Set<ExcludedResource> getFilteredResources() {
         return filtered;
     }
@@ -37,7 +52,7 @@ class ResourceFilter {
     /**
      * 実際に除外対象となったリソース。
      */
-    static class ExcludedResource {
+    public static class ExcludedResource {
 
         /** リソースパス */
         private final String resourcePath;
@@ -47,7 +62,8 @@ class ResourceFilter {
 
         /**
          * コンストラクタ。
-         * @param resourcePath リソースパス
+         *
+         * @param resourcePath   リソースパス
          * @param appliedPattern 適用されたパターン
          */
         ExcludedResource(String resourcePath, Pattern appliedPattern) {

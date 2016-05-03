@@ -1,7 +1,9 @@
 package com.github.sambatriste.drd;
 
 
-import com.github.sambatriste.drd.Printer.MavenLoggerPrinter;
+import com.github.sambatriste.drd.duplicated.Controller;
+import com.github.sambatriste.drd.util.Printer;
+import com.github.sambatriste.drd.util.Printer.MavenLoggerPrinter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -11,8 +13,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * クラスパス上に存在するリソースの重複を検出するプラグイン。
@@ -27,44 +27,49 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
-    /** 除外するリソースのパターン（正規表現）*/
+    /**
+     * 除外するリソースのパターン（正規表現）
+     * @see java.util.regex.Pattern
+     */
     @Parameter
     private List<String> excludedResources;
 
     /** 出力先 */
-    private final ResultPrinter resultPrinter = new ResultPrinter(new MavenLoggerPrinter(getLog()));
+    private final Printer printer = new MavenLoggerPrinter(getLog());
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException {
-        resultPrinter.printExcludedResources(excludedResources);
         try {
-            // RUNTIME scope
-            List<String> runtimeScoped = project.getRuntimeClasspathElements();
-            detectAndPrint(runtimeScoped, "RUNTIME");
-
-            // TEST scope
-            List<String> testScoped = project.getTestClasspathElements();
-            detectAndPrint(testScoped, "TEST");
+            detectAndPrint();
         } catch (DependencyResolutionRequiredException e) {
-            throw new RuntimeException(e);
+            throw new MojoExecutionException(
+                    "artifact file has not been resolved.",
+                    e);
         }
     }
 
     /**
-     * 検出した重複を出力する
-     * @param classpathElements クラスパス要素
-     * @param scopeName スコープ名
+     * 重複を検出し、出力する。
+     * @throws DependencyResolutionRequiredException
      */
-    private void detectAndPrint(List<String> classpathElements, String scopeName) {
-        DuplicateResourceDetector detector = new DuplicateResourceDetector(
-                classpathElements,
+    private void detectAndPrint() throws DependencyResolutionRequiredException {
+
+        // RUNTIME scope
+        @SuppressWarnings("unchecked")
+        List<String> runtimeScoped = project.getRuntimeClasspathElements();
+        // TEST scope
+        @SuppressWarnings("unchecked")
+        List<String> testScoped = project.getTestClasspathElements();
+
+        Controller controller = new Controller(
+                runtimeScoped,
+                testScoped,
                 excludedResources,
-                scopeName,
-                resultPrinter
+                printer
         );
-        detector.printDuplicatedElements();
+        controller.execute();
+
     }
 
 }

@@ -1,4 +1,7 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.duplicated;
+
+import com.github.sambatriste.drd.classpath.ClasspathElements;
+import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.List;
 
@@ -8,7 +11,7 @@ import java.util.List;
 class DuplicateResourceDetector {
 
     /** クラスパス要素 */
-    private final List<String> classpathElements;
+    private final ClasspathElements classpathElements;
 
     /** 除外パターン */
     private final PatternSet excludedResources;
@@ -32,11 +35,12 @@ class DuplicateResourceDetector {
             List<String> excludedResources,
             String scopeName,
             ResultPrinter resultPrinter) {
-        this.classpathElements = classpathElements;
+        this.classpathElements = new ClasspathElements(classpathElements);
         this.excludedResources = new PatternSet(excludedResources);
         this.scopeName = scopeName;
         this.resultPrinter = resultPrinter;
     }
+
 
     /**
      * 重複したリソースを出力する。
@@ -53,7 +57,7 @@ class DuplicateResourceDetector {
      * @return 重複したリソース
      */
     private DuplicatedResources detect() {
-        ClasspathElementPairs pairs = new ClasspathElementPairs(classpathElements);
-        return pairs.detectDuplicated(excludedResources);
+        ClasspathElements elements = classpathElements;
+        return elements.detectDuplicated(excludedResources);
     }
 }

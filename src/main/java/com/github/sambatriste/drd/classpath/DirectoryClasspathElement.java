@@ -1,4 +1,4 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
 import java.io.File;
 import java.io.IOException;

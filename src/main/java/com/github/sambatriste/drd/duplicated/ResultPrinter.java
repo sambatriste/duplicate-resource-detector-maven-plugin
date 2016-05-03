@@ -1,8 +1,12 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.duplicated;
 
-import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.classpath.ClasspathElement;
+import com.github.sambatriste.drd.classpath.ClasspathElements;
+import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.util.PatternSet;
+import com.github.sambatriste.drd.util.Printer;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -14,6 +18,9 @@ class ResultPrinter {
 
     /** タブ */
     private static final String TAB = "    ";
+
+    /** hr */
+    private static final String HR = "------------------------------";
 
     /** 出力先 */
     private final Printer printer;
@@ -32,7 +39,7 @@ class ResultPrinter {
      * @param classpathElements クラスパス要素
      * @param scopeName スコープ名
      */
-    void print(List<String> classpathElements, String scopeName) {
+    void print(ClasspathElements classpathElements, String scopeName) {
         printer.println(scopeName + " classpath [");
         for (String element : classpathElements) {
             printer.println(TAB, element);
@@ -54,7 +61,8 @@ class ResultPrinter {
             return;
         }
 
-        for (Entry<String, Set<ClasspathElement>> entry : duplicated) {
+
+        for (Entry<String, Collection<ClasspathElement>> entry : duplicated) {
             print(entry);
         }
     }
@@ -65,15 +73,15 @@ class ResultPrinter {
      */
     private void print(Set<ExcludedResource> excluded) {
         if (excluded.isEmpty()) {
-            printer.println("no resource excluded.");
+            printer.println("No resource excluded.");
             return;
         }
 
-        printer.println("excluded resources --------");
+        printer.println("excluded resources ", HR);
         for (ExcludedResource e : excluded) {
             printer.println(TAB, e);
         }
-        printer.println("---------");
+        printer.println(HR);
     }
 
     /**
@@ -81,15 +89,15 @@ class ResultPrinter {
      *
      * @param entry 1件分のエントリ
      */
-    private void print(Entry<String, Set<ClasspathElement>> entry) {
+    private void print(Entry<String, Collection<ClasspathElement>> entry) {
         printer.println("resource=" + entry.getKey());
         for (ClasspathElement classpathElement : entry.getValue()) {
             printer.println(TAB, classpathElement);
         }
-        printer.println("----------------------");
+        printer.println(HR);
     }
 
-    void printExcludedResources(List<String> excludedResources) {
+    void printExcludedResources(PatternSet excludedResources) {
         printer.println("excluded resource patterns=" + excludedResources);
     }
 
