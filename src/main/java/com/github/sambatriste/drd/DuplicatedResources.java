@@ -2,10 +2,10 @@ package com.github.sambatriste.drd;
 
 
 import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;

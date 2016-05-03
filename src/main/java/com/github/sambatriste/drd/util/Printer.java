@@ -1,4 +1,4 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.util;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -12,7 +12,7 @@ import java.nio.file.Files;
 /**
  * メッセージを出力するインタフェース。
  */
-interface Printer extends Closeable {
+public interface Printer extends Closeable {
 
     /**
      * 出力する。
@@ -61,7 +61,7 @@ interface Printer extends Closeable {
          *
          * @param log ログ
          */
-        MavenLoggerPrinter(Log log) {
+        public MavenLoggerPrinter(Log log) {
             this.log = log;
         }
 
@@ -106,7 +106,7 @@ interface Printer extends Closeable {
          *
          * @param file 出力先ファイル
          */
-        FilePrinter(File file) {
+        public FilePrinter(File file) {
             try {
                 writer = Files.newBufferedWriter(file.toPath(), Charset.forName("UTF-8"));
             } catch (IOException e) {

@@ -1,5 +1,7 @@
 package com.github.sambatriste.drd;
 
+import com.github.sambatriste.drd.util.PatternSet;
+
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

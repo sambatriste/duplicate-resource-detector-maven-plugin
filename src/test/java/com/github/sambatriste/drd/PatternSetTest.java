@@ -1,6 +1,7 @@
 package com.github.sambatriste.drd;
 
 
+import com.github.sambatriste.drd.util.PatternSet;
 import org.junit.Test;
 
 import java.util.Arrays;

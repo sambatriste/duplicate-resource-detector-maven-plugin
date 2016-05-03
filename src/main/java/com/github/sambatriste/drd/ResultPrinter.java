@@ -1,6 +1,7 @@
 package com.github.sambatriste.drd;
 
 import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.util.Printer;
 
 import java.util.List;
 import java.util.Map.Entry;

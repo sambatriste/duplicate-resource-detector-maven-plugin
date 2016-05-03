@@ -1,7 +1,7 @@
 package com.github.sambatriste.drd;
 
 
-import com.github.sambatriste.drd.Printer.MavenLoggerPrinter;
+import com.github.sambatriste.drd.util.Printer.MavenLoggerPrinter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -11,8 +11,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * クラスパス上に存在するリソースの重複を検出するプラグイン。

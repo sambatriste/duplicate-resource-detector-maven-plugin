@@ -1,6 +1,8 @@
 package com.github.sambatriste.drd;
 
 
+import com.github.sambatriste.drd.util.PatternSet;
+
 import java.util.ArrayList;
 import java.util.List;
 

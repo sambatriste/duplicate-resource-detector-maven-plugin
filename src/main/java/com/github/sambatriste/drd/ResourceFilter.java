@@ -1,5 +1,7 @@
 package com.github.sambatriste.drd;
 
+import com.github.sambatriste.drd.util.PatternSet;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
