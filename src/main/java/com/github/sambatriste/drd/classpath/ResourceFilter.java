@@ -23,6 +23,14 @@ public class ResourceFilter {
         this.excludedResourcePatterns = excludedResourcePatterns;
     }
 
+    /**
+     * 引数で与えられたリソースに、本フィルターを適用する。
+     * フィルターが適用された場合、その情報は本インスタンスに記録される。
+     *
+     * @param resourcePath 対象となるリソース
+     * @return フィルターが適用された場合、真
+     * @see #getFilteredResources()
+     */
     boolean applyTo(String resourcePath) {
         Pattern matchedPattern = excludedResourcePatterns.getMatched(resourcePath);
         if (matchedPattern == null) {
@@ -32,6 +40,11 @@ public class ResourceFilter {
         return true;
     }
 
+    /**
+     * 本フィルターにより除外されたリソースを取得する。
+     *
+     * @return 除外されたリソース
+     */
     Set<ExcludedResource> getFilteredResources() {
         return filtered;
     }
@@ -49,7 +62,8 @@ public class ResourceFilter {
 
         /**
          * コンストラクタ。
-         * @param resourcePath リソースパス
+         *
+         * @param resourcePath   リソースパス
          * @param appliedPattern 適用されたパターン
          */
         ExcludedResource(String resourcePath, Pattern appliedPattern) {

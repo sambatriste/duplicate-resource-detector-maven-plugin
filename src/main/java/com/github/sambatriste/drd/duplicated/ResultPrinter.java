@@ -6,6 +6,7 @@ import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
 import com.github.sambatriste.drd.util.PatternSet;
 import com.github.sambatriste.drd.util.Printer;
 
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -60,7 +61,8 @@ class ResultPrinter {
             return;
         }
 
-        for (Entry<String, Set<ClasspathElement>> entry : duplicated) {
+
+        for (Entry<String, Collection<ClasspathElement>> entry : duplicated) {
             print(entry);
         }
     }
@@ -87,7 +89,7 @@ class ResultPrinter {
      *
      * @param entry 1件分のエントリ
      */
-    private void print(Entry<String, Set<ClasspathElement>> entry) {
+    private void print(Entry<String, Collection<ClasspathElement>> entry) {
         printer.println("resource=" + entry.getKey());
         for (ClasspathElement classpathElement : entry.getValue()) {
             printer.println(TAB, classpathElement);

@@ -37,6 +37,7 @@ public class DuplicatedResources implements Iterable<Entry<String, Collection<Cl
         this.duplicated = Collections.unmodifiableMap(duplicated);
         this.excluded = Collections.unmodifiableSet(excluded);
     }
+
     /**
      *  実際に除外されたリソースを取得する。
      *

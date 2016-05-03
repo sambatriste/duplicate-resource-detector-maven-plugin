@@ -1,7 +1,7 @@
 package com.github.sambatriste.drd;
 
 
-import com.github.sambatriste.drd.duplicated.Executor;
+import com.github.sambatriste.drd.duplicated.Controller;
 import com.github.sambatriste.drd.util.Printer;
 import com.github.sambatriste.drd.util.Printer.MavenLoggerPrinter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -62,13 +62,13 @@ public class DuplicatedResourceDetectorMojo extends AbstractMojo {
         @SuppressWarnings("unchecked")
         List<String> testScoped = project.getTestClasspathElements();
 
-        Executor executor = new Executor(
+        Controller controller = new Controller(
                 runtimeScoped,
                 testScoped,
                 excludedResources,
                 printer
         );
-        executor.execute();
+        controller.execute();
 
     }
 
