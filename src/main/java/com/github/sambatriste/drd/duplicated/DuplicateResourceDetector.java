@@ -1,4 +1,4 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.duplicated;
 
 import com.github.sambatriste.drd.classpath.ClasspathElementPairs;
 import com.github.sambatriste.drd.util.PatternSet;
@@ -40,6 +40,7 @@ class DuplicateResourceDetector {
         this.scopeName = scopeName;
         this.resultPrinter = resultPrinter;
     }
+
 
     /**
      * 重複したリソースを出力する。

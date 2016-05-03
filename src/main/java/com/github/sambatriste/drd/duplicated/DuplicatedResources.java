@@ -1,9 +1,8 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.duplicated;
 
 
-import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
 import com.github.sambatriste.drd.classpath.ClasspathElement;
-import com.github.sambatriste.drd.util.PatternSet;
+import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -23,6 +22,7 @@ public class DuplicatedResources implements Iterable<Entry<String, Set<Classpath
      */
     private final Map<String, Set<ClasspathElement>> duplicated;
 
+    /** 実際に除外されたリソース */
     private final Set<ExcludedResource> excluded;
 
     /**
@@ -31,12 +31,16 @@ public class DuplicatedResources implements Iterable<Entry<String, Set<Classpath
      * @param duplicated 重複したリソース
      * @param excluded 除外されたリソース
      */
-    DuplicatedResources(Map<String, Set<ClasspathElement>> duplicated,
+     public DuplicatedResources(Map<String, Set<ClasspathElement>> duplicated,
                         Set<ExcludedResource> excluded) {
         this.duplicated = Collections.unmodifiableMap(duplicated);
         this.excluded = Collections.unmodifiableSet(excluded);
     }
-
+    /**
+     *  実際に除外されたリソースを取得する。
+     *
+     *  @return 実際に除外されたリソース
+     */
     Set<ExcludedResource> getExcludedResources() {
         return excluded;
     }
@@ -56,14 +60,5 @@ public class DuplicatedResources implements Iterable<Entry<String, Set<Classpath
         return duplicated.entrySet().iterator();
     }
 
-    /**
-     * オブジェクトの組み立てを開始する。
-     *
-     * @param excludedResourcePatterns 除外対象リソースのパターン
-     * @return ビルダー
-     */
-    public static DuplicatedResourceContext startBuild(PatternSet excludedResourcePatterns) {
-        return new DuplicatedResourceContext(excludedResourcePatterns);
-    }
 
 }

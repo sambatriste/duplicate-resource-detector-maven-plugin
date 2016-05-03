@@ -1,8 +1,7 @@
 package com.github.sambatriste.drd.classpath;
 
 
-import com.github.sambatriste.drd.DuplicatedResourceContext;
-import com.github.sambatriste.drd.DuplicatedResources;
+import com.github.sambatriste.drd.duplicated.DuplicatedResources;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.ArrayList;
@@ -33,11 +32,11 @@ public class ClasspathElementPairs {
      * @return 重複した要素
      */
     public DuplicatedResources detectDuplicated(PatternSet excluded) {
-        DuplicatedResourceContext builder = DuplicatedResources.startBuild(excluded);
+        DuplicatedResourceContext ctx = new DuplicatedResourceContext(excluded);
         for (ClasspathElementPair pair : pairs) {
-            pair.appendDuplicatedResourcesTo(builder);
+            pair.appendDuplicatedResourcesTo(ctx);
         }
-        return builder.build();
+        return ctx.getResult();
     }
 
     /**
@@ -51,6 +50,7 @@ public class ClasspathElementPairs {
         /** クラスパス要素 */
         private final List<String> classpathElements;
 
+        /** {@link ClasspathElement}のファクトリ */
         private final ClasspathElementFactory elementFactory = new ClasspathElementFactory();
 
         /**
@@ -71,7 +71,8 @@ public class ClasspathElementPairs {
             pairs.clear();
             for (int i = 0; i < classpathElements.size() - 1; i++) {
                 for (int j = i + 1; j < classpathElements.size(); j++) {
-                    pairs.add(createPair(i, j));
+                    ClasspathElementPair pair = createPairFrom(i, j);
+                    pairs.add(pair);
                 }
             }
             return pairs;
@@ -84,7 +85,7 @@ public class ClasspathElementPairs {
          * @param j もう一方の添字
          * @return 組み合わされたペア
          */
-        private ClasspathElementPair createPair(int i, int j) {
+        private ClasspathElementPair createPairFrom(int i, int j) {
             ClasspathElement one = elementFactory.create(classpathElements.get(i));
             ClasspathElement another = elementFactory.create(classpathElements.get(j));
             return new ClasspathElementPair(one, another);

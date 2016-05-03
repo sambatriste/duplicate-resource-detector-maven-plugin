@@ -58,4 +58,11 @@ public class PatternSet {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return patterns.toString();
+
+
+    }
 }

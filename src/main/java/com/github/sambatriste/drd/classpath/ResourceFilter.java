@@ -1,4 +1,4 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
 import com.github.sambatriste.drd.util.PatternSet;
 
@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-class ResourceFilter {
+public class ResourceFilter {
 
     /** 除外対象リソースのパターン */
     private final PatternSet excludedResourcePatterns;
@@ -39,7 +39,7 @@ class ResourceFilter {
     /**
      * 実際に除外対象となったリソース。
      */
-    static class ExcludedResource {
+    public static class ExcludedResource {
 
         /** リソースパス */
         private final String resourcePath;

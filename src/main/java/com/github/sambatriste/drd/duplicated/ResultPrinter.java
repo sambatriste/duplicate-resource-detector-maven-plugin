@@ -1,7 +1,8 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.duplicated;
 
-import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
 import com.github.sambatriste.drd.classpath.ClasspathElement;
+import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.util.PatternSet;
 import com.github.sambatriste.drd.util.Printer;
 
 import java.util.List;
@@ -91,7 +92,7 @@ class ResultPrinter {
         printer.println("----------------------");
     }
 
-    void printExcludedResources(List<String> excludedResources) {
+    void printExcludedResources(PatternSet excludedResources) {
         printer.println("excluded resource patterns=" + excludedResources);
     }
 
