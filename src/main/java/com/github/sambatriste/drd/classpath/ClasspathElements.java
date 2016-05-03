@@ -5,23 +5,28 @@ import com.github.sambatriste.drd.duplicated.DuplicatedResources;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * クラスパス要素の全ペア。
  */
-public class ClasspathElementPairs {
+public class ClasspathElements implements Iterable<String> {
+
+    /** このインスタンスの元となったクラスパス要素 */
+    private final List<String> source;
 
     /** クラスパス要素のペア */
     private final List<ClasspathElementPair> pairs;
 
     /**
      * コンストラクタ。
-     * 与えられたクラスパスから、クラスパス要素のペアを作成する。
+     * 与えられたクラスパスから、クラスパス要素のペア{@link ClasspathElementPair}を作成する。
      *
      * @param classpathElements クラスパス要素
      */
-    public ClasspathElementPairs(List<String> classpathElements) {
+    public ClasspathElements(List<String> classpathElements) {
+        this.source = new ArrayList<>(classpathElements);
         this.pairs = new PairListBuilder(classpathElements).createPairs();
     }
 
@@ -39,13 +44,14 @@ public class ClasspathElementPairs {
         return ctx.getResult();
     }
 
-    /**
-     * クラスパス要素から{@link ClasspathElementPair}のリストを作成するクラス。
-     */
-    private static class PairListBuilder {
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<String> iterator() {
+        return source.iterator();
+    }
 
-        /** 作成されたペア */
-        private final List<ClasspathElementPair> pairs;
+    /** クラスパス要素から{@link ClasspathElementPair}のリストを作成するクラス。 */
+    private static class PairListBuilder {
 
         /** クラスパス要素 */
         private final List<String> classpathElements;
@@ -59,7 +65,6 @@ public class ClasspathElementPairs {
          */
         private PairListBuilder(List<String> classpathElements) {
             this.classpathElements = classpathElements;
-            this.pairs = new ArrayList<>(classpathElements.size());
         }
 
         /**
@@ -68,7 +73,7 @@ public class ClasspathElementPairs {
          * @return {@link ClasspathElement}のリスト
          */
         private List<ClasspathElementPair> createPairs() {
-            pairs.clear();
+            List<ClasspathElementPair> pairs = new ArrayList<>(classpathElements.size());
             for (int i = 0; i < classpathElements.size() - 1; i++) {
                 for (int j = i + 1; j < classpathElements.size(); j++) {
                     ClasspathElementPair pair = createPairFrom(i, j);

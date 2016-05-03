@@ -1,11 +1,11 @@
 package com.github.sambatriste.drd.duplicated;
 
 import com.github.sambatriste.drd.classpath.ClasspathElement;
+import com.github.sambatriste.drd.classpath.ClasspathElements;
 import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
 import com.github.sambatriste.drd.util.PatternSet;
 import com.github.sambatriste.drd.util.Printer;
 
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -38,7 +38,7 @@ class ResultPrinter {
      * @param classpathElements クラスパス要素
      * @param scopeName スコープ名
      */
-    void print(List<String> classpathElements, String scopeName) {
+    void print(ClasspathElements classpathElements, String scopeName) {
         printer.println(scopeName + " classpath [");
         for (String element : classpathElements) {
             printer.println(TAB, element);

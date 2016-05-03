@@ -4,6 +4,7 @@ import com.github.sambatriste.drd.duplicated.DuplicatedResources;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Set;
  */
 class DuplicatedResourceContext {
 
+    /** リソースフィルタ */
     private final ResourceFilter filter;
 
     /**
@@ -22,7 +24,7 @@ class DuplicatedResourceContext {
      * キー:リソース名
      * 値:そのリソースを含んでいるクラスパス要素
      */
-    private final Map<String, Set<ClasspathElement>> duplicated = new LinkedHashMap<>();
+    private final MultiValueMapWrapper<String, ClasspathElement> duplicated = new MultiValueMapWrapper<>();
 
     /**
      * コンストラクタ。
@@ -37,18 +39,13 @@ class DuplicatedResourceContext {
      * 重複したリソースを登録する。
      *
      * @param resourcePath 重複したリソースのパス
-     * @param elements 重複したリソースを保持していたクラスパス要素
+     * @param elements     重複したリソースを保持していたクラスパス要素
      */
     void add(String resourcePath, ClasspathElement... elements) {
-        if (isMetaInf(resourcePath)) {
+        if (isMetaInf(resourcePath) || filter.applyTo(resourcePath)) {
             return;
         }
-        if (filter.applyTo(resourcePath)) {
-            return;
-        }
-        Set<ClasspathElement> values = getValueContainer(resourcePath);
-        values.addAll(Arrays.asList(elements));
-        assert values.size() > 1;
+        duplicated.add(resourcePath, elements);
     }
 
     /**
@@ -57,7 +54,9 @@ class DuplicatedResourceContext {
      * @return {@link DuplicatedResources}
      */
     DuplicatedResources getResult() {
-        return new DuplicatedResources(duplicated, filter.getFilteredResources());
+        return new DuplicatedResources(
+                duplicated.map,
+                filter.getFilteredResources());
     }
 
 
@@ -72,17 +71,50 @@ class DuplicatedResourceContext {
     }
 
     /**
-     * リソースパスに対応するクラスパスの{@link Set}を取得する。
+     * 値に複数の要素を持つMapのラッパークラス。
      *
-     * @param resourcePath リソースパス
-     * @return リソースパスに対応するクラスパスのSet
+     * @param <K> キーの型
+     * @param <V> 値の型
      */
-    private Set<ClasspathElement> getValueContainer(String resourcePath) {
-        Set<ClasspathElement> elements = duplicated.get(resourcePath);
-        if (elements == null) {
-            elements = new LinkedHashSet<>();
-            duplicated.put(resourcePath, elements);
+    private static class MultiValueMapWrapper<K, V> {
+
+        /** ラップ対象のMap */
+        private final Map<K, Set<V>> map = new LinkedHashMap<>();
+
+        /**
+         * 重複したリソースを登録する。
+         *
+         * @param key         キー
+         * @param valuesToAdd 追加対象の値
+         */
+        private void add(K key, V[] valuesToAdd) {
+            add(key, Arrays.asList(valuesToAdd));
         }
-        return elements;
+
+        /**
+         * 重複したリソースを登録する。
+         *
+         * @param key         キー
+         * @param valuesToAdd 追加対象の値
+         */
+        private void add(K key, Collection<V> valuesToAdd) {
+            Set<V> values = getValueContainer(key);
+            values.addAll(valuesToAdd);
+        }
+
+        /**
+         * キー対応する値のコレクションを取得する。
+         *
+         * @param key リソースパス
+         * @return リソースパスに対応するクラスパスのSet
+         */
+        private Set<V> getValueContainer(K key) {
+            Set<V> container = map.get(key);
+            if (container == null) {
+                container = new LinkedHashSet<>();
+                map.put(key, container);
+            }
+            return container;
+        }
     }
 }
