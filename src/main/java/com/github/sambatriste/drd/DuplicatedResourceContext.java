@@ -1,5 +1,6 @@
 package com.github.sambatriste.drd;
 
+import com.github.sambatriste.drd.classpath.ClasspathElement;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.Set;
  * {@link DuplicatedResources}の中間結果を保持するクラス。
  * META-INF配下は管理対象外とする。
  */
-class DuplicatedResourceContext {
+public class DuplicatedResourceContext {
 
     private final ResourceFilter filter;
 
@@ -38,7 +39,7 @@ class DuplicatedResourceContext {
      * @param resourcePath 重複したリソースのパス
      * @param elements 重複したリソースを保持していたクラスパス要素
      */
-    void add(String resourcePath, ClasspathElement... elements) {
+    public void add(String resourcePath, ClasspathElement... elements) {
         if (isMetaInf(resourcePath)) {
             return;
         }
@@ -55,7 +56,7 @@ class DuplicatedResourceContext {
      *
      * @return {@link DuplicatedResources}
      */
-    DuplicatedResources build() {
+    public DuplicatedResources build() {
         return new DuplicatedResources(duplicated, filter.getFilteredResources());
     }
 

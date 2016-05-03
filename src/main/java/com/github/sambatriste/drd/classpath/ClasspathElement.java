@@ -1,11 +1,11 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
 import java.util.List;
 
 /**
  * クラスパス要素。
  */
-interface ClasspathElement {
+public interface ClasspathElement {
 
     /**
      * このクラスパス要素に含まれる内容物を取得する。

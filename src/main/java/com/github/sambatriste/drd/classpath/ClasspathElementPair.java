@@ -1,4 +1,6 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
+
+import com.github.sambatriste.drd.DuplicatedResourceContext;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,8 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
 
+import com.github.sambatriste.drd.DuplicatedResourceContext;
+import com.github.sambatriste.drd.DuplicatedResources;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * クラスパス要素の全ペア。
  */
-class ClasspathElementPairs {
+public class ClasspathElementPairs {
 
     /** クラスパス要素のペア */
     private final List<ClasspathElementPair> pairs;
@@ -20,7 +22,7 @@ class ClasspathElementPairs {
      *
      * @param classpathElements クラスパス要素
      */
-    ClasspathElementPairs(List<String> classpathElements) {
+    public ClasspathElementPairs(List<String> classpathElements) {
         this.pairs = new PairListBuilder(classpathElements).createPairs();
     }
 
@@ -30,7 +32,7 @@ class ClasspathElementPairs {
      * @param excluded 除外パターン
      * @return 重複した要素
      */
-    DuplicatedResources detectDuplicated(PatternSet excluded) {
+    public DuplicatedResources detectDuplicated(PatternSet excluded) {
         DuplicatedResourceContext builder = DuplicatedResources.startBuild(excluded);
         for (ClasspathElementPair pair : pairs) {
             pair.appendDuplicatedResourcesTo(builder);

@@ -1,5 +1,6 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.classpath;
 
+import com.github.sambatriste.drd.classpath.DirectoryClasspathElement;
 import org.junit.Test;
 
 import java.io.File;

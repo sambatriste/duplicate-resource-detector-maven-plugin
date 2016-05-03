@@ -1,14 +1,13 @@
-package com.github.sambatriste.drd;
+package com.github.sambatriste.drd.util;
 
 
-import com.github.sambatriste.drd.util.PatternSet;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * {@link PatternSet}のテスト

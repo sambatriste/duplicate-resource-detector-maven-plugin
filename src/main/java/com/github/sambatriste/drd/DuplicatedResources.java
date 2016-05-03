@@ -2,6 +2,7 @@ package com.github.sambatriste.drd;
 
 
 import com.github.sambatriste.drd.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.classpath.ClasspathElement;
 import com.github.sambatriste.drd.util.PatternSet;
 
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.Set;
 /**
  * 重複したリソース。
  */
-class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement>>> {
+public class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement>>> {
 
     /**
      * 重複したリソース。
@@ -61,7 +62,7 @@ class DuplicatedResources implements Iterable<Entry<String, Set<ClasspathElement
      * @param excludedResourcePatterns 除外対象リソースのパターン
      * @return ビルダー
      */
-    static DuplicatedResourceContext startBuild(PatternSet excludedResourcePatterns) {
+    public static DuplicatedResourceContext startBuild(PatternSet excludedResourcePatterns) {
         return new DuplicatedResourceContext(excludedResourcePatterns);
     }
 
