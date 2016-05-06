@@ -2,7 +2,7 @@ package com.github.sambatriste.drd.duplicated;
 
 import com.github.sambatriste.drd.classpath.ClasspathElement;
 import com.github.sambatriste.drd.classpath.ClasspathElements;
-import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.classpath.ExcludedResource;
 import com.github.sambatriste.drd.util.PatternSet;
 import com.github.sambatriste.drd.util.Printer;
 

@@ -2,7 +2,8 @@ package com.github.sambatriste.drd.duplicated;
 
 
 import com.github.sambatriste.drd.classpath.ClasspathElement;
-import com.github.sambatriste.drd.classpath.ResourceFilter.ExcludedResource;
+import com.github.sambatriste.drd.classpath.ExcludedResource;
+
 
 import java.util.Collection;
 import java.util.Collections;
