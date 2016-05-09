@@ -36,10 +36,8 @@ public class ExcludedResource {
         if (o == null || getClass() != o.getClass()) return false;
 
         ExcludedResource that = (ExcludedResource) o;
-
-        if (!resourcePath.equals(that.resourcePath)) return false;
-        return appliedPattern.equals(that.appliedPattern);
-
+        return resourcePath.equals(that.resourcePath) &&
+                appliedPattern.equals(that.appliedPattern);
     }
 
     @Override

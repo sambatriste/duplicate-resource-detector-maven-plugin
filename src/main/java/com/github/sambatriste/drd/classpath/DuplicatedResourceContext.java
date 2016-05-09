@@ -49,7 +49,7 @@ class DuplicatedResourceContext {
      */
     DuplicatedResources getResult() {
         return new DuplicatedResources(
-                duplicated.getOriginal(),
+                duplicated.unwrap(),
                 filter.getFilteredResources());
     }
 

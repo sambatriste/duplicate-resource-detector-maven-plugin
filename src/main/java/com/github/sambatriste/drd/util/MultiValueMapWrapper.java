@@ -17,15 +17,26 @@ public class MultiValueMapWrapper<K, V> {
     /** ラップ対象のMap */
     private final Map<K, Collection<V>> map;
 
+    /** コンストラクタ。*/
     public MultiValueMapWrapper() {
         this(new LinkedHashMap<K, Collection<V>>());
     }
 
+    /**
+     * コンストラクタ。
+     *
+     * @param map マップ
+     */
     public MultiValueMapWrapper(Map<K, Collection<V>> map) {
         this.map = map;
     }
 
-    public Map<K, Collection<V>> getOriginal() {
+    /**
+     * ラップしているMapインスタンスを取得する。
+     *
+     * @return Map
+     */
+    public Map<K, Collection<V>> unwrap() {
         return map;
     }
 
@@ -46,8 +57,8 @@ public class MultiValueMapWrapper<K, V> {
      * @param valuesToAdd 追加対象の値
      */
     public void add(K key, Collection<V> valuesToAdd) {
-        Collection<V> values = getValueContainer(key);
-        values.addAll(valuesToAdd);
+        Collection<V> container = getValueContainerOf(key);
+        container.addAll(valuesToAdd);
     }
 
     /**
@@ -56,7 +67,7 @@ public class MultiValueMapWrapper<K, V> {
      * @param key リソースパス
      * @return リソースパスに対応するクラスパスのSet
      */
-    private Collection<V> getValueContainer(K key) {
+    private Collection<V> getValueContainerOf(K key) {
         Collection<V> container = map.get(key);
         if (container == null) {
             container = createValueContainer();
@@ -65,6 +76,11 @@ public class MultiValueMapWrapper<K, V> {
         return container;
     }
 
+    /**
+     * 複数の値を格納するためのコレクションを生成する。
+     *
+     * @return コレクション
+     */
     protected Collection<V> createValueContainer() {
         return new LinkedHashSet<>();
     }

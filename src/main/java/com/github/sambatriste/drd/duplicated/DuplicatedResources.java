@@ -33,8 +33,10 @@ public class DuplicatedResources implements Iterable<Entry<String, Collection<Cl
      * @param duplicated 重複したリソース
      * @param excluded 除外されたリソース
      */
-     public DuplicatedResources(Map<String, Collection<ClasspathElement>> duplicated,
-                        Set<ExcludedResource> excluded) {
+     public DuplicatedResources(
+             Map<String, Collection<ClasspathElement>> duplicated,
+             Set<ExcludedResource> excluded) {
+
         this.duplicated = Collections.unmodifiableMap(duplicated);
         this.excluded = Collections.unmodifiableSet(excluded);
     }
