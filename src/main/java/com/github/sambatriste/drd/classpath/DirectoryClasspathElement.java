@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * {@link ClasspathElement}のディレクトリ実装クラス。
  */
-class DirectoryClasspathElement implements ClasspathElement {
+class DirectoryClasspathElement extends ClasspathElement.AbstractClasspathElement {
 
     /** ディレクトリ */
     private final File root;
@@ -23,10 +23,11 @@ class DirectoryClasspathElement implements ClasspathElement {
     /**
      * コンストラクタ。
      *
-     * @param dir ディレクトリ
+     * @param classpathElement クラスパス要素
      */
-    DirectoryClasspathElement(File dir) {
-        this.root = dir;
+    DirectoryClasspathElement(String classpathElement) {
+        super(classpathElement);
+        this.root = new File(classpathElement);
     }
 
     /** {@inheritDoc} */
@@ -43,13 +44,6 @@ class DirectoryClasspathElement implements ClasspathElement {
 
         return visitor.resourcesInDir;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return root.getPath();
-    }
-
 
     /**
      * ディレクトリ配下のファイルを相対パスで探索する{@link FileVisitor}実装クラス。

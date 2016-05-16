@@ -15,7 +15,7 @@ public class DirectoryClasspathElementTest {
     public void test() {
         File file = new File("target/classes");
         assert file.exists();
-        DirectoryClasspathElement sut = new DirectoryClasspathElement(file);
+        DirectoryClasspathElement sut = new DirectoryClasspathElement("target/classes");
         
         System.out.println("sut.getContents() = " + sut.getContents());
     }

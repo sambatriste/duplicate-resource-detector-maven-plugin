@@ -11,13 +11,10 @@ import java.util.zip.ZipFile;
 /**
  * {@link ClasspathElement}のjarファイル実装クラス。
  */
-class JarClasspathElement implements ClasspathElement {
+class JarClasspathElement extends ClasspathElement.AbstractClasspathElement {
 
     /** Jarファイル */
     private final File jarFile;
-
-    /** クラスパス要素 */
-    private final String source;
 
     /**
      * コンストラクタ。
@@ -25,7 +22,7 @@ class JarClasspathElement implements ClasspathElement {
      * @param classpathElement クラスパス要素
      */
     JarClasspathElement(String classpathElement) {
-        this.source = classpathElement;
+        super(classpathElement);
         this.jarFile = new File(classpathElement);
     }
 
@@ -33,12 +30,6 @@ class JarClasspathElement implements ClasspathElement {
     @Override
     public List<String> getContents() {
         return tvf(jarFile);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return source;
     }
 
     /**

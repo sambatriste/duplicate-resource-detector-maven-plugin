@@ -23,7 +23,7 @@ class ClasspathElementFactory {
             return new JarClasspathElement(classpathElement);
         }
         if (f.isDirectory()) {
-            return new DirectoryClasspathElement(f);
+            return new DirectoryClasspathElement(classpathElement);
         }
         throw new IllegalArgumentException("unknown type. " + classpathElement);
     }

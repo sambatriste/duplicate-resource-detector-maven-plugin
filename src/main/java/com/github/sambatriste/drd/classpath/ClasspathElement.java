@@ -26,4 +26,45 @@ public interface ClasspathElement {
      */
     String toString();
 
+    /**
+     * {@link ClasspathElement}の抽象クラス。
+     *
+     */
+    abstract class AbstractClasspathElement implements ClasspathElement {
+
+        /** 元となったクラスパス要素 */
+        private final String source;
+
+        /**
+         * コンストラクタ
+         * @param classpathElement クラスパス要素
+         */
+        AbstractClasspathElement(String classpathElement) {
+            this.source = classpathElement;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            AbstractClasspathElement that = (AbstractClasspathElement) o;
+
+            return source != null ? source.equals(that.source) : that.source == null;
+
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int hashCode() {
+            return source != null ? source.hashCode() : 0;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString() {
+            return source;
+        }
+    }
 }
