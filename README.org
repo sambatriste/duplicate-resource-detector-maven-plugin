@@ -17,7 +17,7 @@
 #+END_SRC
 
 #+BEGIN_EXAMPLE
-mvn com.github.sambatriste:duplicate-resource-detector-maven-plugin:0.0.5:detect
+mvn com.github.sambatriste:duplicate-resource-detector-maven-plugin:0.0.6:detect
 #+END_EXAMPLE
 
 
@@ -25,10 +25,10 @@ mvn com.github.sambatriste:duplicate-resource-detector-maven-plugin:0.0.5:detect
 [INFO] Scanning for projects...
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------
-[INFO] Building duplicate-resource-detector-test 0.0.5
+[INFO] Building duplicate-resource-detector-test 0.0.6
 [INFO] ------------------------------------------------------------------------
-[INFO] 
-[INFO] --- duplicate-resource-detector-maven-plugin:0.0.5:detect (default-cli) @ duplicate-resource-detector-test ---
+[INFO]
+[INFO] --- duplicate-resource-detector-maven-plugin:0.0.6:detect (default-cli) @ duplicate-resource-detector-test ---
 [info] RUNTIME classpath [
 [info]     C:\Users\username\.ghq\github.com\sambatriste\duplicate-resource-detector-maven-plugin\acceptance-test\target\classes
 [info]     C:\Users\username\.m2\repository\org\slf4j\slf4j-simple\1.7.7\slf4j-simple-1.7.7.jar
@@ -65,8 +65,8 @@ mvn com.github.sambatriste:duplicate-resource-detector-maven-plugin:0.0.5:detect
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 0.198 s
-[INFO] Finished at: 2016-05-10T10:02:28+09:00
-[INFO] Final Memory: 6M/121M
+[INFO] Total time: 0.249s
+[INFO] Finished at: Mon May 16 16:18:02 JST 2016
+[INFO] Final Memory: 4M/121M
 [INFO] ------------------------------------------------------------------------
 #+END_EXAMPLE
