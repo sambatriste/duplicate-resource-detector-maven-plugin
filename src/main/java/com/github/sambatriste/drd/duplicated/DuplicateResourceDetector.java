@@ -57,7 +57,6 @@ class DuplicateResourceDetector {
      * @return 重複したリソース
      */
     private DuplicatedResources detect() {
-        ClasspathElements elements = classpathElements;
-        return elements.detectDuplicated(excludedResources);
+        return classpathElements.detectDuplicated(excludedResources);
     }
 }

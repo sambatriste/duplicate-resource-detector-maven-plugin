@@ -89,7 +89,7 @@ public interface Printer extends Closeable {
         /** {@inheritDoc} */
         @Override
         void print(Object object) {
-            System.out.println(object);
+            System.out.print(object);
         }
     }
 
