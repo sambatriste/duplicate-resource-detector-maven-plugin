@@ -10,7 +10,7 @@
       <plugin>
         <groupId>com.github.sambatriste</groupId>
         <artifactId>duplicate-resource-detector-maven-plugin</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.5</version>
       </plugin>
     </plugins>
   </build>
